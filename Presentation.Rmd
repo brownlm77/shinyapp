@@ -1,0 +1,118 @@
+---
+title: "Shiny Application"
+author: "Larry Brown"
+date: "3/13/2022"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(plotly)
+library(dplyr)
+```
+
+## New York Air Quality Measurements
+```{r, comment="", warning=FALSE}
+
+fig <- plot_ly(data=airquality, x=~Temp, y=~Ozone, 
+               type="scatter",
+               mode="markers",
+               marker=list(size=8))
+
+fig <- fig %>% layout(margin = list(l = 50, r = 50, b = 50, t = 50, pad = 20),
+                      font = list(color="#470", size="14"),
+                      yaxis = list(zeroline = FALSE, title="Ozone (ppb)"),
+                      xaxis = list(zeroline = FALSE, title="Temperature (degrees F)")
+                      )
+
+fig
+
+```
+
+```{r  , comment="", echo=FALSE}
+
+df <- airquality
+df$Temp2 <- df$Temp^2   
+
+# Sort dataframe by Temp
+df <- df[order(df$Temp), ]
+# Drop Solar.R columns (has NA)
+df <- subset(df, select = -c(2))
+# Drop NA rows
+df <- na.omit(df)
+set.seed(1)
+
+
+model1 <- lm(Ozone ~ Temp, data = df)
+
+model1_summary <- summary(model1)
+t1 <- model1_summary$coefficients[,1:4]
+t1[,4] <- sprintf(" %g", t1[,4])
+t1[,1:3] <- sprintf("%8.3f",model1_summary$coefficients[,1:3])
+df_t1 <- as.data.frame(t1)
+
+
+model2 <- lm(Ozone ~ Temp + Temp2, data = df)
+
+model2_summary <- summary(model2)
+t2 <- model2_summary$coefficients[,1:4]
+t2[,4] <- sprintf(" %g", t2[,4])
+t2[,1:3] <- sprintf("%8.3f",model2_summary$coefficients[,1:3])
+df_t2 <- as.data.frame(t2) 
+
+airquality <- df
+
+```
+
+## Calculate Linear Model
+```{r, comment="", echo=TRUE}
+model1 <- lm(Ozone ~ Temp, data = airquality)
+```
+```{r , comment=""}
+
+equation1 = paste("Ozone  =",
+                  sprintf(model1$coefficients[1] , fmt = '%#.2f'),
+                  "+",
+                  sprintf(model1$coefficients[2] , fmt = '%#.2f'),
+                  "* Temp")
+cat("\n", equation1)
+
+knitr::kable(df_t1, format = "html", table.attr = "style='width:90%;'")
+
+```
+## Calculate Quadratic Model
+```{r, comment="", echo=TRUE}
+model2 <- lm(Ozone ~ Temp + Temp2, data = airquality)
+```
+```{r, comment=""}
+
+equation2 = paste("Ozone  =",
+                  sprintf(model2$coefficients[1] , fmt = '%#.2f'),
+                  "+",
+                  sprintf(model2$coefficients[2] , fmt = '%#.2f'),
+                  "* Temp +",
+                  sprintf(model2$coefficients[3] , fmt = '%#.2f'), 
+                  "* Temp^2")                  
+cat("\n", equation2)
+
+knitr::kable(df_t2, format = "html", table.attr = "style='width:90%;'")
+```
+
+## Ability to add noise to model
+```{r}
+          df$Noise <- rnorm(nrow(df), mean = 0, sd=3) 
+          df$OzNoise <- df$Ozone + df$Noise  
+          plot(df$Temp, df$Ozone, 
+               main="New York Air Quality Measurements",
+               ylab="Ozone (ppb)",
+               xlab = "Temperature (degrees F)",
+               col="red", pch=3)
+          points(df$Temp, df$OzNoise, col = "blue", pch=1, cex = 1)
+          legend(x="topleft", c("Original Data" , "With Noise"),
+                 pch = c(3, 1), 
+                 col = c("red", "blue"), 
+                 cex = 1.2, 
+                 bty = "n" ) 
+```
+<a href="https://brownlm.shinyapps.io/myjhuapp/">Shiny App</a>: https://brownlm.shinyapps.io/myjhuapp/<br>
+<a href="https://rpubs.com/brownlm/shiny">Presentation</a>: https://rpubs.com/brownlm/shiny

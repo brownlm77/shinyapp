@@ -5,8 +5,8 @@ library(shiny)
 df <- airquality
 df$Temp2 <- df$Temp^2
 
-df <- airquality
-df$Temp2 <- df$Temp^2   
+#df <- airquality
+#df$Temp2 <- df$Temp^2   
 
 # Sort dataframe by Temp
 df <- df[order(df$Temp), ]
@@ -48,8 +48,6 @@ shinyServer(function(input, output) {
                xlab = "Temperature (degrees F)",
                col="red", pch=3)
           points(df$Temp, df$OzNoise, col = "blue", pch=1, cex = 1)
-          #legend(25, 250, c("Model 1 Prediction", "Model 2 Prediction"), pch = 16, 
-          #       col = c("red", "blue"), bty = "n", cex = 1.2)     
           legend(x="topleft", c("Original Data" , "With Noise"),
                  pch = c(3, 1), 
                  col = c("red", "blue"), 

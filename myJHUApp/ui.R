@@ -6,7 +6,7 @@ shinyUI(fluidPage(
                sliderInput("sliderNoise", "Amount of noise to add?", 0, 50, value = 0),
                checkboxInput("showModel1", "Linear Model", value = FALSE),
                checkboxInput("showModel2", "Quadratic Model", value = FALSE),
-
+ 
                
                
                
