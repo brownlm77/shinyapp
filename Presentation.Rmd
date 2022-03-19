@@ -114,5 +114,6 @@ knitr::kable(df_t2, format = "html", table.attr = "style='width:90%;'")
                  cex = 1.2, 
                  bty = "n" ) 
 ```
-<a href="https://brownlm.shinyapps.io/myjhuapp/">Shiny App</a>: https://brownlm.shinyapps.io/myjhuapp/<br>
+<a href="https://brownlm.shinyapps.io/myjhuapp/">Shiny App</a>: https://brownlm.shinyapps.io/myjhuapp/ <a href="https://github.com/brownlm77/shinyapp">Code</a>: https://github.com/brownlm77/shinyapp
+<br>
 <a href="https://rpubs.com/brownlm/shiny">Presentation</a>: https://rpubs.com/brownlm/shiny
